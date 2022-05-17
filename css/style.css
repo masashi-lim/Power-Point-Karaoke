@@ -1,0 +1,50 @@
+body {
+  background-color: white;
+  color: rgb(45, 45, 45);
+}
+
+header {
+  display: flex;
+  margin: auto;
+  justify-content: left;
+  font-size: 20px;
+  background-color: rgb(214, 241, 253);
+  border-radius: 8px;
+}
+
+header div {
+  margin: auto 30px;
+}
+
+.buttons {
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  margin: 16px 2px;
+}
+
+main {
+  max-height: 70%;
+}
+
+main p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 24px;
+}
+
+section {
+  display: flex;
+}
+
+section div {
+  margin-right: 50px;
+}
+
+img {
+  max-height: 500px;
+}

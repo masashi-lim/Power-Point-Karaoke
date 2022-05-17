@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>TestRunnter</title>
+    <link href="./css/style.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./js/main.js"></script>
+    
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <div id="test-div" style="display: none;"></div>
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <!-- Setup Mocha -->
+    <script>
+      mocha.setup('bdd');
+      mocha.reporter('html');
+    mocha.timeout(60000);
+  </script>
+      <!-- Run Mocha -->
+    <script src="./test/test.js"></script>
+    <script>
+        // Only tests run in real browser, injected script run if options.run == true
+        if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+          mocha.run();
+        }
+      </script>
+  </body>
+</html>
