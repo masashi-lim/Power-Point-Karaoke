@@ -2,11 +2,9 @@
 
 const resetButton = document.getElementById("reset");
 const startButton = document.getElementById("start");
-const form = document.getElementById("form");
 const img = document.getElementById("img");
 const imgAmount = document.getElementById("imgamount");
 const countDownP = document.querySelector("#countDown");
-let puresenTime = 3;
 let photoDivide = 5;
 
 let imageArray, movieBannerArray;
@@ -61,7 +59,7 @@ async function countDown(num, string) {
 
 function waitSec(num) {
   let counter = 0;
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       counter++;
       resolve(counter);
@@ -69,11 +67,9 @@ function waitSec(num) {
   });
 }
 
-start.addEventListener("click", (event) => {
+startButton.addEventListener("click", (event) => {
   event.preventDefault();
-  if (puresenTime !== NaN && photoDivide !== NaN) {
-    gameStart();
-  }
+  gameStart();
 });
 
 function presenStart() {
