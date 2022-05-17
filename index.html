@@ -7,21 +7,34 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
+    
     <h1>パワポカラオケマシーン</h1>
+
     <header>
       <div class="buttons">
         <button id="start">スタート</button>
         <button id ="reset">リセット</button>
       </div>
         <div>
-          <p>プレゼン時間 : 3分</p>
-          <p>分割数 : 5枚</p>
+          <p>プレゼン時間</p>
+          <select id="puresentime">
+            <option value="1">1分</option>
+            <option value="3" selected>3分</option>
+            <option value="5">5分</option>
+          </select>
+          <p>画像枚数</p>
+          <select id="numberofimg">
+            <option value="3">3枚</option>
+            <option value="5" selected>5枚</option>
+            <option value="7">7枚</option>
+          </select>
         </div>
       <div>
         <p id="timer">タイマー</p>
         <p id="imgamount"> / </p>
       </div>
     </header>
+    
     <main>
       <section>
         <div>
@@ -32,6 +45,7 @@
       </section>
       <img id="img" />
     </main>
+
     <script src="./js/main.js"></script>
   </body>
 </html>

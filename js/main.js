@@ -5,13 +5,15 @@ const startButton = document.getElementById("start");
 const img = document.getElementById("img");
 const imgAmount = document.getElementById("imgamount");
 const countDownP = document.querySelector("#countDown");
-let photoDivide = 5;
+let presenTimeValue, photoDivideValue;
+
+// console.log('prVal: ', presenTimeValue);
+// console.log('photoVal: ', photoDivideValue);
 
 let imageArray, movieBannerArray;
-
-const themes = ["友達の作り方", "仲直りの仕方", "おいしい朝食"];
 let talkingNow = false;
 
+const themes = ["友達の作り方", "仲直りの仕方", "ストレス発散方法"];
 const url = "https://ghibliapi.herokuapp.com/films";
 
 // ↓for test
@@ -19,31 +21,52 @@ const url = "https://ghibliapi.herokuapp.com/films";
 // const photoD = 4;
 // const countD = [];
 
+const timeTable = {
+  "1-3": [5, 20, 10],
+  "1-5": [5, 10, 10],
+  "1-7": [5, 7, 7],
+  "3-3": [10, 60, 40],
+  "3-5": [10, 35, 25],
+  "3-7": [10, 25, 10],
+  "5-3": [15, 120, 30],
+  "5-5": [15, 60, 30],
+  "5-7": [15, 40, 30]
+}
+
 resetButton.addEventListener("click", () => {
   window.location.reload();
 });
 
-async function gameStart() {
+startButton.addEventListener("click", (event) => {
+  // event.preventDefault();
+  presenTimeValue = document.getElementById("puresentime").value;
+  photoDivideValue = document.getElementById("numberofimg").value;
+  let key = presenTimeValue + "-" + photoDivideValue;
+  let timeTableArray = timeTable[key];
+  gameStart(timeTableArray);
+});
+
+async function gameStart(array) {
   const randomNumber = Math.floor(Math.random() * themes.length);
   const themeP = document.querySelector("#theme");
   themeP.innerText = "お題 :" + themes[randomNumber];
-  await countDown(10, "スタートまで");
-  await countDown(10, "画像まで");
+  await countDown(array[0], "スタートまで");
+  // await countDown(3, "画像まで");
   presenStart();
-  for (let i = 1; i <= photoDivide; i++) {
-    if (i < photoDivide) {
+  for (let i = 1; i <= photoDivideValue; i++) {
+    if (i < photoDivideValue) {
       await getImage();
-      imgAmount.innerText = i + " / 5";
-      await countDown(35, "次の画像まで");
+      imgAmount.innerText = i + " / " + photoDivideValue;
+      await countDown(array[1], "次の画像まで");
     } else {
       img.src = "";
       const concluedP = document.querySelector("#conclued");
       concluedP.innerText = "結論は・・・";
       countDownP.innerText = "";
-      await waitSec(10);
+      await waitSec(5);
       await getImage();
-      await waitSec(25);
-      imgAmount.innerText = "5 / 5";
+      imgAmount.innerText = i + " / " + photoDivideValue;
+      await waitSec(array[2]);
       talkingNow = false;
     }
   }
@@ -67,10 +90,6 @@ function waitSec(num) {
   });
 }
 
-startButton.addEventListener("click", (event) => {
-  event.preventDefault();
-  gameStart();
-});
 
 function presenStart() {
   talkingNow = true;
