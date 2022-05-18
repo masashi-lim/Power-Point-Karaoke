@@ -5,10 +5,22 @@ const startButton = document.getElementById("start");
 const img = document.getElementById("img");
 const imgAmount = document.getElementById("imgamount");
 const countDownP = document.querySelector("#countDown");
+const header = document.querySelector("header");
 let presenTimeValue, photoDivideValue;
 
-// console.log('prVal: ', presenTimeValue);
-// console.log('photoVal: ', photoDivideValue);
+  // sp mode ↓
+  const spHidden = document.getElementsByClassName("special");
+  const specialPics = [
+    "PPKM_special_pics/PPKM1.jpg",
+    "PPKM_special_pics/PPKM2.jpg",
+    "PPKM_special_pics/PPKM3.jpg",
+    "PPKM_special_pics/PPKM4.jpg",
+    "PPKM_special_pics/PPKM5.jpg",
+    "PPKM_special_pics/PPKM6.jpg",
+    "PPKM_special_pics/PPKM7.jpg",
+    "PPKM_special_pics/PPKM8.jpg"
+  ]
+  // sp mode ↑
 
 let imageArray, movieBannerArray;
 let talkingNow = false;
@@ -30,28 +42,67 @@ const timeTable = {
   "3-7": [10, 25, 10],
   "5-3": [15, 120, 30],
   "5-5": [15, 60, 30],
-  "5-7": [15, 40, 30]
-}
+  "5-7": [15, 40, 30],
+};
 
 resetButton.addEventListener("click", () => {
   window.location.reload();
 });
 
-startButton.addEventListener("click", (event) => {
-  // event.preventDefault();
-  presenTimeValue = document.getElementById("puresentime").value;
-  photoDivideValue = document.getElementById("numberofimg").value;
-  let key = presenTimeValue + "-" + photoDivideValue;
-  let timeTableArray = timeTable[key];
-  gameStart(timeTableArray);
+startButton.addEventListener("click", () => {
+  // sp mode ↓
+  const spmode = document.getElementById("spmode");
+  if (spmode.checked === true) {
+    spHidden[0].classList.toggle("hidden");
+    spHidden[1].classList.toggle("hidden");
+    spHidden[2].classList.toggle("hidden");
+    spHidden[3].classList.toggle("hidden");
+    spHidden[4].classList.toggle("hidden");
+    specialGameStart();
+    // sp mode ↑
+  } else {
+    presenTimeValue = document.getElementById("puresentime").value;
+    photoDivideValue = document.getElementById("numberofimg").value;
+    let key = presenTimeValue + "-" + photoDivideValue;
+    let timeTableArray = timeTable[key];
+    header.classList.toggle("hidden");
+    spHidden[3].classList.toggle("hidden");
+    spHidden[4].classList.toggle("hidden");
+    gameStart(timeTableArray);
+  }
 });
+
+// sp mode ↓
+async function specialGameStart() {
+  document.body.style.color = "lightgray";
+  const newImage = document.createElement("img");
+  newImage.style.height = "600px";
+  document.body.appendChild(newImage);
+  for (let i = 0; i <= 7; i++) {
+    newImage.src = specialPics[i];
+    console.log('newImage: ', newImage);
+    if (i === 6) {
+      // await waitSec(25);
+      await waitSec(3);
+    } else if (i === 5) {
+      // await waitSec(5);
+      await waitSec(3);
+    } else if (i >= 1) {
+      // await waitSec(35);
+      await waitSec(3);
+    } else {
+      // await waitSec(10);
+      await waitSec(3);
+    }
+  }
+}
+// sp mode ↑
 
 async function gameStart(array) {
   const randomNumber = Math.floor(Math.random() * themes.length);
   const themeP = document.querySelector("#theme");
   themeP.innerText = "お題 :" + themes[randomNumber];
   await countDown(array[0], "スタートまで");
-  // await countDown(3, "画像まで");
   presenStart();
   for (let i = 1; i <= photoDivideValue; i++) {
     if (i < photoDivideValue) {
@@ -68,6 +119,7 @@ async function gameStart(array) {
       imgAmount.innerText = i + " / " + photoDivideValue;
       await waitSec(array[2]);
       talkingNow = false;
+      header.classList.toggle("hidden");
     }
   }
   return true;
@@ -90,7 +142,6 @@ function waitSec(num) {
   });
 }
 
-
 function presenStart() {
   talkingNow = true;
   const startTime = Date.now();
@@ -112,6 +163,7 @@ async function getImage() {
   try {
     imageArray = await axios.get(url).then((imgObj) => {
       return imgObj.data.map((imgArray) => {
+        console.log('imgArray: ', imgArray);
         return imgArray["image"];
       });
     });
@@ -130,9 +182,7 @@ function selectImage() {
   const allImages = [];
   imageArray.forEach((img) => allImages.push(img));
   movieBannerArray.forEach((img) => allImages.push(img));
-  console.log("allImages: ", allImages);
   let randomNumberTwo = Math.floor(Math.random() * allImages.length);
   let selectedUrl = allImages[randomNumberTwo];
-  console.log("selectedUrl: ", selectedUrl);
   img.src = selectedUrl;
 }

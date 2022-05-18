@@ -7,21 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    
     <h1>パワポカラオケマシーン</h1>
 
-    <header>
-      <div class="buttons">
-        <button id="start">スタート</button>
-        <button id ="reset">リセット</button>
-      </div>
-        <div>
+    <header class="header special">
+      <div class="menu">
+        <div class="menu__setting">
           <p>プレゼン時間</p>
           <select id="puresentime">
             <option value="1">1分</option>
             <option value="3" selected>3分</option>
             <option value="5">5分</option>
           </select>
+        </div>
+        <div class="menu__setting">
           <p>画像枚数</p>
           <select id="numberofimg">
             <option value="3">3枚</option>
@@ -29,23 +27,34 @@
             <option value="7">7枚</option>
           </select>
         </div>
-      <div>
-        <p id="timer">タイマー</p>
-        <p id="imgamount"> / </p>
+      </div>
+      <div class="buttons">
+        <button id="start">スタート</button>
+        <button id="reset">リセット</button>
       </div>
     </header>
-    
-    <main>
+      <div class="info header special">
+        <p id="imgamount">現在 / 画像枚数</p>
+        <p id="timer">タイマー</p>
+      </div>
+
+    <main class="special">
       <section>
-        <div>
+        <div class="indicator">
           <p id="theme"></p>
           <p id="conclued"></p>
         </div>
-        <p id="countDown"></p>
+        <p id="countDown" class="indicator"></p>
       </section>
-      <img id="img" />
+      <div class="indicater">
+        <img id="img" />
+      </div>
     </main>
 
+    <div id="sp_position">
+      <input id="spmode" class="special" type="checkbox">
+      <label class="special" for="spmode">SP MODE で遊ぶ</label>
+    </div>
     <script src="./js/main.js"></script>
   </body>
 </html>
