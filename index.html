@@ -32,11 +32,19 @@
         <button id="start">スタート</button>
         <button id="reset">リセット</button>
       </div>
-    </header>
-      <div class="info header special">
-        <p id="imgamount">現在 / 画像枚数</p>
-        <p id="timer">タイマー</p>
+      <div>
+        <input
+          id="imageSelector"
+          type="file"
+          accept=".jpeg,.jpg,.png"
+          multiple
+        />
       </div>
+    </header>
+    <div class="info header special">
+      <p id="imgamount">現在 / 画像枚数</p>
+      <p id="timer">タイマー</p>
+    </div>
 
     <main class="special">
       <section>
@@ -52,7 +60,7 @@
     </main>
 
     <div id="sp_position">
-      <input id="spmode" class="special" type="checkbox">
+      <input id="spmode" class="special" type="checkbox" />
       <label class="special" for="spmode">SP MODE で遊ぶ</label>
     </div>
     <script src="./js/main.js"></script>
