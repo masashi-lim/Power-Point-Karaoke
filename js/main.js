@@ -6,26 +6,57 @@ const img = document.getElementById("img");
 const imgAmount = document.getElementById("imgamount");
 const countDownP = document.querySelector("#countDown");
 const header = document.querySelector("header");
+const imgSelector = document.getElementById("imageSelector");
+const numOfImgSelector = document.getElementById("numberofimg");
 let presenTimeValue, photoDivideValue;
+let ownImageFlg = false;
+let ownImageBlobs = [];
 
-  // sp mode ↓
-  const spHidden = document.getElementsByClassName("special");
-  const specialPics = [
-    "PPKM_special_pics/PPKM1.jpg",
-    "PPKM_special_pics/PPKM2.jpg",
-    "PPKM_special_pics/PPKM3.jpg",
-    "PPKM_special_pics/PPKM4.jpg",
-    "PPKM_special_pics/PPKM5.jpg",
-    "PPKM_special_pics/PPKM6.jpg",
-    "PPKM_special_pics/PPKM7.jpg",
-    "PPKM_special_pics/PPKM8.jpg"
-  ]
-  // sp mode ↑
+numOfImgSelector.addEventListener("change", () => {
+  // フラグを更新
+  ownImageFlg = imgSelector.files.length >= numOfImgSelector.value;
+});
+
+imgSelector.addEventListener("change", () => {
+  ownImageFlg = imgSelector.files.length >= numOfImgSelector.value;
+  // プレゼンに必要な枚数以上を選択できているか
+  if (ownImageFlg) {
+    // imgタグのsrcに設定するための処理
+    const blobs = [];
+    for (const img of imgSelector.files) {
+      // blob urlを作成
+      blobs.push(window.URL.createObjectURL(img));
+    }
+    ownImageBlobs = blobs;
+    console.log("file selected");
+  }
+});
+
+// sp mode ↓
+const spHidden = document.getElementsByClassName("special");
+const specialPics = [
+  "PPKM_special_pics/PPKM1.jpg",
+  "PPKM_special_pics/PPKM2.jpg",
+  "PPKM_special_pics/PPKM3.jpg",
+  "PPKM_special_pics/PPKM4.jpg",
+  "PPKM_special_pics/PPKM5.jpg",
+  "PPKM_special_pics/PPKM6.jpg",
+  "PPKM_special_pics/PPKM7.jpg",
+  "PPKM_special_pics/PPKM8.jpg",
+];
+// sp mode ↑
 
 let imageArray, movieBannerArray;
 let talkingNow = false;
 
-const themes = ["友達の作り方", "仲直りの仕方", "ストレス発散方法"];
+const themes = [
+  "友達の作り方",
+  "仲直りの仕方",
+  "ストレス発散方法",
+  "人に優しくする方法",
+  "宿題の頑張り方",
+  "やる気を出す方法",
+];
 const url = "https://ghibliapi.herokuapp.com/films";
 
 // ↓for test
@@ -80,7 +111,7 @@ async function specialGameStart() {
   document.body.appendChild(newImage);
   for (let i = 0; i <= 7; i++) {
     newImage.src = specialPics[i];
-    console.log('newImage: ', newImage);
+    console.log("newImage: ", newImage);
     if (i === 6) {
       // await waitSec(25);
       await waitSec(3);
@@ -96,26 +127,38 @@ async function specialGameStart() {
     }
   }
 }
+
 // sp mode ↑
 
 async function gameStart(array) {
+  const concluedP = document.querySelector("#conclued");
+  // 2回目のために初期化
+  concluedP.innerText = "";
+  img.src = "";
+
+  // テーマをランダムに決める
   const randomNumber = Math.floor(Math.random() * themes.length);
   const themeP = document.querySelector("#theme");
   themeP.innerText = "お題 :" + themes[randomNumber];
+
   await countDown(array[0], "スタートまで");
+  // apiで画像を取ってくる
+  await getImage();
+  // ストップウォッチをスタートさせる
   presenStart();
   for (let i = 1; i <= photoDivideValue; i++) {
     if (i < photoDivideValue) {
-      await getImage();
+      // 写真を更新
+      selectImage();
       imgAmount.innerText = i + " / " + photoDivideValue;
       await countDown(array[1], "次の画像まで");
     } else {
       img.src = "";
-      const concluedP = document.querySelector("#conclued");
       concluedP.innerText = "結論は・・・";
       countDownP.innerText = "";
       await waitSec(5);
-      await getImage();
+      // 写真を更新
+      selectImage();
       imgAmount.innerText = i + " / " + photoDivideValue;
       await waitSec(array[2]);
       talkingNow = false;
@@ -126,9 +169,9 @@ async function gameStart(array) {
 }
 
 async function countDown(num, string) {
-  for (let i = num; i > 0; i--) {
-    await waitSec(1);
+  for (let i = num; i >= 0; i--) {
     countDownP.innerText = string + " : " + i + " 秒";
+    await waitSec(1);
   }
 }
 
@@ -163,7 +206,7 @@ async function getImage() {
   try {
     imageArray = await axios.get(url).then((imgObj) => {
       return imgObj.data.map((imgArray) => {
-        console.log('imgArray: ', imgArray);
+        console.log("imgArray: ", imgArray);
         return imgArray["image"];
       });
     });
@@ -172,7 +215,6 @@ async function getImage() {
         return imgArray["movie_banner"];
       });
     });
-    selectImage();
   } catch (err) {
     throw new Error(err);
   }
@@ -180,8 +222,12 @@ async function getImage() {
 
 function selectImage() {
   const allImages = [];
-  imageArray.forEach((img) => allImages.push(img));
-  movieBannerArray.forEach((img) => allImages.push(img));
+  if (ownImageFlg) {
+    ownImageBlobs.forEach((blob) => allImages.push(blob));
+  } else {
+    imageArray.forEach((img) => allImages.push(img));
+    movieBannerArray.forEach((img) => allImages.push(img));
+  }
   let randomNumberTwo = Math.floor(Math.random() * allImages.length);
   let selectedUrl = allImages[randomNumberTwo];
   img.src = selectedUrl;
